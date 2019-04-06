@@ -1,0 +1,520 @@
+
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html><head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+   <!--
+This HTML was auto-generated from MATLAB code.
+To make changes, update the MATLAB code and republish this document.
+      --><title>A4_test_dev_final</title><meta name="generator" content="MATLAB 9.4"><link rel="schema.DC" href="http://purl.org/dc/elements/1.1/"><meta name="DC.date" content="2019-03-31"><meta name="DC.source" content="A4_test_dev_final.m"><style type="text/css">
+html,body,div,span,applet,object,iframe,h1,h2,h3,h4,h5,h6,p,blockquote,pre,a,abbr,acronym,address,big,cite,code,del,dfn,em,font,img,ins,kbd,q,s,samp,small,strike,strong,sub,sup,tt,var,b,u,i,center,dl,dt,dd,ol,ul,li,fieldset,form,label,legend,table,caption,tbody,tfoot,thead,tr,th,td{margin:0;padding:0;border:0;outline:0;font-size:100%;vertical-align:baseline;background:transparent}body{line-height:1}ol,ul{list-style:none}blockquote,q{quotes:none}blockquote:before,blockquote:after,q:before,q:after{content:'';content:none}:focus{outine:0}ins{text-decoration:none}del{text-decoration:line-through}table{border-collapse:collapse;border-spacing:0}
+
+html { min-height:100%; margin-bottom:1px; }
+html body { height:100%; margin:0px; font-family:Arial, Helvetica, sans-serif; font-size:10px; color:#000; line-height:140%; background:#fff none; overflow-y:scroll; }
+html body td { vertical-align:top; text-align:left; }
+
+h1 { padding:0px; margin:0px 0px 25px; font-family:Arial, Helvetica, sans-serif; font-size:1.5em; color:#d55000; line-height:100%; font-weight:normal; }
+h2 { padding:0px; margin:0px 0px 8px; font-family:Arial, Helvetica, sans-serif; font-size:1.2em; color:#000; font-weight:bold; line-height:140%; border-bottom:1px solid #d6d4d4; display:block; }
+h3 { padding:0px; margin:0px 0px 5px; font-family:Arial, Helvetica, sans-serif; font-size:1.1em; color:#000; font-weight:bold; line-height:140%; }
+
+a { color:#005fce; text-decoration:none; }
+a:hover { color:#005fce; text-decoration:underline; }
+a:visited { color:#004aa0; text-decoration:none; }
+
+p { padding:0px; margin:0px 0px 20px; }
+img { padding:0px; margin:0px 0px 20px; border:none; }
+p img, pre img, tt img, li img, h1 img, h2 img { margin-bottom:0px; } 
+
+ul { padding:0px; margin:0px 0px 20px 23px; list-style:square; }
+ul li { padding:0px; margin:0px 0px 7px 0px; }
+ul li ul { padding:5px 0px 0px; margin:0px 0px 7px 23px; }
+ul li ol li { list-style:decimal; }
+ol { padding:0px; margin:0px 0px 20px 0px; list-style:decimal; }
+ol li { padding:0px; margin:0px 0px 7px 23px; list-style-type:decimal; }
+ol li ol { padding:5px 0px 0px; margin:0px 0px 7px 0px; }
+ol li ol li { list-style-type:lower-alpha; }
+ol li ul { padding-top:7px; }
+ol li ul li { list-style:square; }
+
+.content { font-size:1.2em; line-height:140%; padding: 20px; }
+
+pre, code { font-size:12px; }
+tt { font-size: 1.2em; }
+pre { margin:0px 0px 20px; }
+pre.codeinput { padding:10px; border:1px solid #d3d3d3; background:#f7f7f7; }
+pre.codeoutput { padding:10px 11px; margin:0px 0px 20px; color:#4c4c4c; }
+pre.error { color:red; }
+
+@media print { pre.codeinput, pre.codeoutput { word-wrap:break-word; width:100%; } }
+
+span.keyword { color:#0000FF }
+span.comment { color:#228B22 }
+span.string { color:#A020F0 }
+span.untermstring { color:#B20000 }
+span.syscmd { color:#B28C00 }
+
+.footer { width:auto; padding:10px 0px; margin:25px 0px 0px; border-top:1px dotted #878787; font-size:0.8em; line-height:140%; font-style:italic; color:#878787; text-align:left; float:none; }
+.footer p { margin:0px; }
+.footer a { color:#878787; }
+.footer a:hover { color:#878787; text-decoration:underline; }
+.footer a:visited { color:#878787; }
+
+table th { padding:7px 5px; text-align:left; vertical-align:middle; border: 1px solid #d6d4d4; font-weight:bold; }
+table td { padding:7px 5px; text-align:left; vertical-align:top; border:1px solid #d6d4d4; }
+
+
+
+
+
+  </style></head><body><div class="content"><h2>Contents</h2><div><ul><li><a href="#2">V1</a></li><li><a href="#3">V2</a></li><li><a href="#4">V3</a></li><li><a href="#5">V4</a></li><li><a href="#6">V5</a></li><li><a href="#7">V6</a></li><li><a href="#8">Part A step response</a></li><li><a href="#9">Part B sin response</a></li><li><a href="#10">Part C Gaussian Pulse</a></li></ul></div><pre class="codeinput">clear <span class="string">all</span>;
+clc;
+
+<span class="comment">% Parameters</span>
+R1 = 1;
+R2 = 2;
+R3 = 10;
+R4 = 0.1;
+RO = 1000;
+C1 = 0.25;
+L1 = 0.2;
+alpha = 100;
+
+<span class="comment">% V = [ V1; V2; V3; V4; V5; IL]</span>
+Vin=1;
+G=zeros(6);
+C=zeros(6);
+</pre><h2 id="2">V1</h2><pre class="codeinput">G(1,:)=[1 0 0 0 0 0]; <span class="comment">% V1</span>
+C(1,:)=[0 0 0 0 0 0]; <span class="comment">% V1</span>
+</pre><h2 id="3">V2</h2><pre class="codeinput">G(2,:)=[(-1/R1) (1/R2+1/R1) 0 0 0 1];
+C(2,:)=[-C1 +C1 0 0 0 0];
+</pre><h2 id="4">V3</h2><pre class="codeinput">G(3,:)=[0 0 1/R3 0 0 -1];
+C(3,:)=[0 0 0 0 0 0];
+</pre><h2 id="5">V4</h2><pre class="codeinput">G(4,:)=[0 0 -1*alpha/R3 1 0 0];
+C(4,:)=[0 0 0 0 0 0];
+</pre><h2 id="6">V5</h2><pre class="codeinput">G(5,:)=[0 0 0 -1/R4 (1/R4+1/RO) 0];
+C(5,:)=[0 0 0 0 0 0];
+</pre><h2 id="7">V6</h2><pre class="codeinput">G(6,:)=[0 -1 1 0 0 0];
+C(6,:)=[0 0 0 0 0 L1];
+</pre><h2 id="8">Part A step response</h2><pre class="codeinput">timesim=1; <span class="comment">% sec</span>
+numsteps=1000;
+
+timestep=timesim/numsteps;
+
+A=(C./timestep+G);
+
+V(1:6,1)=[0;0;0;0;0;0];
+
+<span class="keyword">for</span> step=1:numsteps
+
+    t=step*timestep;
+
+    <span class="keyword">if</span>(t&gt;0.03)
+      Vin=1;
+    <span class="keyword">else</span>
+      Vin=0;
+    <span class="keyword">end</span>
+
+    F=[Vin; 0; 0; 0; 0; 0];
+
+    B=C*V(1:6,step)./timestep+F;
+
+    V(1:6,step+1)=A\B;
+
+
+<span class="keyword">end</span>
+
+figure(3)
+plot(linspace(0,timesim,numsteps+1),V(1,:))
+title(<span class="string">'Input Voltage: Step Response'</span>)
+xlabel(<span class="string">'Time (s)'</span>)
+ylabel(<span class="string">'Voltage (V)'</span>)
+
+
+figure(4)
+plot(linspace(0,timesim,numsteps+1),V(5,:))
+title(<span class="string">'Output Voltage: Step Response'</span>)
+xlabel(<span class="string">'Time (s)'</span>)
+ylabel(<span class="string">'Voltage (V)'</span>)
+
+Yi = fft(V(1,:));
+Yo = fft(V(5,:));
+
+figure(5)
+plot(linspace(-1/timestep*0.5,1/timestep*0.5,length(Yi)),fftshift(abs(Yi)))
+title(<span class="string">'Input Frequency Content: Step Response'</span>)
+xlabel(<span class="string">'Frequency (Hz)'</span>)
+ylabel(<span class="string">'Power'</span>)
+
+figure(6)
+plot(linspace(-1/timestep*0.5,1/timestep*0.5,length(Yo)),fftshift(abs(Yo)))
+title(<span class="string">'Output Frequency Content: Step Response'</span>)
+xlabel(<span class="string">'Frequency (Hz)'</span>)
+ylabel(<span class="string">'Power'</span>)
+</pre><img vspace="5" hspace="5" src="A4_test_dev_final_01.png" alt=""> <img vspace="5" hspace="5" src="A4_test_dev_final_02.png" alt=""> <img vspace="5" hspace="5" src="A4_test_dev_final_03.png" alt=""> <img vspace="5" hspace="5" src="A4_test_dev_final_04.png" alt=""> <h2 id="9">Part B sin response</h2><pre class="codeinput">timesim=1; <span class="comment">% sec</span>
+numsteps=1000;
+
+f=1/0.03;
+
+timestep=timesim/numsteps;
+
+A=(C./timestep+G);
+
+
+
+clear <span class="string">V</span>
+
+V(1:6,1)=[0;0;0;0;0;0];
+
+<span class="keyword">for</span> step=1:numsteps
+
+    t=step*timestep;
+
+    Vin=sin(2*pi*f*t);
+
+    F=[Vin; 0; 0; 0; 0; 0];
+
+    B=C*V(1:6,step)./timestep+F;
+
+    V(1:6,step+1)=A\B;
+
+
+<span class="keyword">end</span>
+
+
+
+figure(7)
+plot(linspace(0,timesim,numsteps+1),V(1,:))
+title(<span class="string">'Input Voltage: Sin Response'</span>)
+xlabel(<span class="string">'Time (s)'</span>)
+ylabel(<span class="string">'Voltage (V)'</span>)
+
+
+figure(8)
+plot(linspace(0,timesim,numsteps+1),V(5,:))
+title(<span class="string">'Output Voltage: Sin Response'</span>)
+xlabel(<span class="string">'Time (s)'</span>)
+ylabel(<span class="string">'Voltage (V)'</span>)
+
+Yi = fft(V(1,:));
+Yo = fft(V(5,:));
+
+figure(9)
+plot(linspace(-1/timestep*0.5,1/timestep*0.5,length(Yi)),fftshift(abs(Yi)))
+title(<span class="string">'Input Frequency Content: Sin Response'</span>)
+xlabel(<span class="string">'Frequency (Hz)'</span>)
+ylabel(<span class="string">'Power'</span>)
+
+figure(10)
+plot(linspace(-1/timestep*0.5,1/timestep*0.5,length(Yo)),fftshift(abs(Yo)))
+title(<span class="string">'Output Frequency Content: Sin Response'</span>)
+xlabel(<span class="string">'Frequency (Hz)'</span>)
+ylabel(<span class="string">'Power'</span>)
+</pre><img vspace="5" hspace="5" src="A4_test_dev_final_05.png" alt=""> <img vspace="5" hspace="5" src="A4_test_dev_final_06.png" alt=""> <img vspace="5" hspace="5" src="A4_test_dev_final_07.png" alt=""> <img vspace="5" hspace="5" src="A4_test_dev_final_08.png" alt=""> <h2 id="10">Part C Gaussian Pulse</h2><pre class="codeinput">timesim=1; <span class="comment">% sec</span>
+numsteps=1000;
+
+f=1/0.03;
+
+timestep=timesim/numsteps;
+
+A=(C./timestep+G);
+
+clear <span class="string">V</span>
+
+V(1:6,1)=[0;0;0;0;0;0];
+
+t=linspace(0,timesim,numsteps);
+
+Pulse=@(t) exp(-(t-0.1)^2/(2.*0.03^2));
+
+
+<span class="comment">%fplot(Pulse,[0 1])</span>
+
+
+<span class="keyword">for</span> step=1:numsteps
+
+    t=step*timestep;
+
+    Vin=Pulse(t);
+
+    F=[Vin; 0; 0; 0; 0; 0];
+
+    B=C*V(1:6,step)./timestep+F;
+
+    V(1:6,step+1)=A\B;
+
+
+<span class="keyword">end</span>
+
+
+figure(11)
+plot(linspace(0,timesim,numsteps+1),V(1,:))
+title(<span class="string">'Input Voltage: Gaussian Pulse'</span>)
+xlabel(<span class="string">'Time (s)'</span>)
+ylabel(<span class="string">'Voltage (V)'</span>)
+
+
+figure(12)
+plot(linspace(0,timesim,numsteps+1),V(5,:))
+title(<span class="string">'Output Voltage: Gaussian Pulse'</span>)
+xlabel(<span class="string">'Time (s)'</span>)
+ylabel(<span class="string">'Voltage (V)'</span>)
+
+Yi = fft(V(1,:));
+Yo = fft(V(5,:));
+
+figure(13)
+plot(linspace(-1/timestep*0.5,1/timestep*0.5,length(Yi)),fftshift(abs(Yi)))
+title(<span class="string">'Input Frequency Content: Gaussian Pulse'</span>)
+xlabel(<span class="string">'Frequency (Hz)'</span>)
+ylabel(<span class="string">'Power'</span>)
+
+figure(14)
+plot(linspace(-1/timestep*0.5,1/timestep*0.5,length(Yo)),fftshift(abs(Yo)))
+title(<span class="string">'Output Frequency Content: Gaussian Pulse'</span>)
+xlabel(<span class="string">'Frequency (Hz)'</span>)
+ylabel(<span class="string">'Power'</span>)
+</pre><img vspace="5" hspace="5" src="A4_test_dev_final_09.png" alt=""> <img vspace="5" hspace="5" src="A4_test_dev_final_10.png" alt=""> <img vspace="5" hspace="5" src="A4_test_dev_final_11.png" alt=""> <img vspace="5" hspace="5" src="A4_test_dev_final_12.png" alt=""> <p class="footer"><br><a href="https://www.mathworks.com/products/matlab/">Published with MATLAB&reg; R2018a</a><br></p></div><!--
+##### SOURCE BEGIN #####
+
+
+clear all;
+clc;
+
+% Parameters
+R1 = 1;
+R2 = 2;
+R3 = 10;
+R4 = 0.1;
+RO = 1000;
+C1 = 0.25;
+L1 = 0.2;
+alpha = 100;
+
+% V = [ V1; V2; V3; V4; V5; IL]
+Vin=1;
+G=zeros(6);
+C=zeros(6);
+
+%% V1
+G(1,:)=[1 0 0 0 0 0]; % V1
+C(1,:)=[0 0 0 0 0 0]; % V1
+
+%% V2
+G(2,:)=[(-1/R1) (1/R2+1/R1) 0 0 0 1]; 
+C(2,:)=[-C1 +C1 0 0 0 0];
+
+%% V3
+G(3,:)=[0 0 1/R3 0 0 -1]; 
+C(3,:)=[0 0 0 0 0 0]; 
+
+%% V4
+G(4,:)=[0 0 -1*alpha/R3 1 0 0]; 
+C(4,:)=[0 0 0 0 0 0]; 
+
+%% V5
+G(5,:)=[0 0 0 -1/R4 (1/R4+1/RO) 0]; 
+C(5,:)=[0 0 0 0 0 0];
+
+%% V6
+G(6,:)=[0 -1 1 0 0 0]; 
+C(6,:)=[0 0 0 0 0 L1]; 
+
+
+
+%% Part A step response
+
+
+timesim=1; % sec
+numsteps=1000;
+
+timestep=timesim/numsteps;
+
+A=(C./timestep+G);
+
+V(1:6,1)=[0;0;0;0;0;0];
+
+for step=1:numsteps
+    
+    t=step*timestep;
+    
+    if(t>0.03)
+      Vin=1;  
+    else
+      Vin=0;
+    end
+    
+    F=[Vin; 0; 0; 0; 0; 0];
+    
+    B=C*V(1:6,step)./timestep+F;
+    
+    V(1:6,step+1)=A\B;
+    
+
+end
+
+figure(3)
+plot(linspace(0,timesim,numsteps+1),V(1,:))
+title('Input Voltage: Step Response')
+xlabel('Time (s)')
+ylabel('Voltage (V)')
+
+
+figure(4)
+plot(linspace(0,timesim,numsteps+1),V(5,:))
+title('Output Voltage: Step Response')
+xlabel('Time (s)')
+ylabel('Voltage (V)')
+
+Yi = fft(V(1,:));
+Yo = fft(V(5,:));
+
+figure(5)
+plot(linspace(-1/timestep*0.5,1/timestep*0.5,length(Yi)),fftshift(abs(Yi)))
+title('Input Frequency Content: Step Response')
+xlabel('Frequency (Hz)')
+ylabel('Power')
+
+figure(6)
+plot(linspace(-1/timestep*0.5,1/timestep*0.5,length(Yo)),fftshift(abs(Yo)))
+title('Output Frequency Content: Step Response')
+xlabel('Frequency (Hz)')
+ylabel('Power')
+
+
+
+
+%% Part B sin response
+
+
+timesim=1; % sec
+numsteps=1000;
+
+f=1/0.03;
+
+timestep=timesim/numsteps;
+
+A=(C./timestep+G);
+
+
+
+clear V
+
+V(1:6,1)=[0;0;0;0;0;0];
+
+for step=1:numsteps
+    
+    t=step*timestep;
+    
+    Vin=sin(2*pi*f*t);
+    
+    F=[Vin; 0; 0; 0; 0; 0];
+    
+    B=C*V(1:6,step)./timestep+F;
+    
+    V(1:6,step+1)=A\B;
+    
+
+end
+
+
+
+figure(7)
+plot(linspace(0,timesim,numsteps+1),V(1,:))
+title('Input Voltage: Sin Response')
+xlabel('Time (s)')
+ylabel('Voltage (V)')
+
+
+figure(8)
+plot(linspace(0,timesim,numsteps+1),V(5,:))
+title('Output Voltage: Sin Response')
+xlabel('Time (s)')
+ylabel('Voltage (V)')
+
+Yi = fft(V(1,:));
+Yo = fft(V(5,:));
+
+figure(9)
+plot(linspace(-1/timestep*0.5,1/timestep*0.5,length(Yi)),fftshift(abs(Yi)))
+title('Input Frequency Content: Sin Response')
+xlabel('Frequency (Hz)')
+ylabel('Power')
+
+figure(10)
+plot(linspace(-1/timestep*0.5,1/timestep*0.5,length(Yo)),fftshift(abs(Yo)))
+title('Output Frequency Content: Sin Response')
+xlabel('Frequency (Hz)')
+ylabel('Power')
+
+
+%% Part C Gaussian Pulse
+
+
+timesim=1; % sec
+numsteps=1000;
+
+f=1/0.03;
+
+timestep=timesim/numsteps;
+
+A=(C./timestep+G);
+
+clear V
+
+V(1:6,1)=[0;0;0;0;0;0];
+
+t=linspace(0,timesim,numsteps);
+
+Pulse=@(t) exp(-(t-0.1)^2/(2.*0.03^2));
+
+
+%fplot(Pulse,[0 1])
+
+
+for step=1:numsteps
+    
+    t=step*timestep;
+    
+    Vin=Pulse(t);
+    
+    F=[Vin; 0; 0; 0; 0; 0];
+    
+    B=C*V(1:6,step)./timestep+F;
+    
+    V(1:6,step+1)=A\B;
+    
+
+end
+
+
+figure(11)
+plot(linspace(0,timesim,numsteps+1),V(1,:))
+title('Input Voltage: Gaussian Pulse')
+xlabel('Time (s)')
+ylabel('Voltage (V)')
+
+
+figure(12)
+plot(linspace(0,timesim,numsteps+1),V(5,:))
+title('Output Voltage: Gaussian Pulse')
+xlabel('Time (s)')
+ylabel('Voltage (V)')
+
+Yi = fft(V(1,:));
+Yo = fft(V(5,:));
+
+figure(13)
+plot(linspace(-1/timestep*0.5,1/timestep*0.5,length(Yi)),fftshift(abs(Yi)))
+title('Input Frequency Content: Gaussian Pulse')
+xlabel('Frequency (Hz)')
+ylabel('Power')
+
+figure(14)
+plot(linspace(-1/timestep*0.5,1/timestep*0.5,length(Yo)),fftshift(abs(Yo)))
+title('Output Frequency Content: Gaussian Pulse')
+xlabel('Frequency (Hz)')
+ylabel('Power')
+
+
+##### SOURCE END #####
+--></body></html>
